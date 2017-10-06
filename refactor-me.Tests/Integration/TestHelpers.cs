@@ -8,10 +8,9 @@ namespace refactor_me.Tests.Integration
 
         public static void SetUp()
         {
-            var dbPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName,
-                "Databases");
+            var dbPath = GetDbPath();
 
-            Helpers.TestDataDirectory = dbPath; 
+            DbHelpers.TestDataDirectory = dbPath; 
 
             try  // Super hack to avoid "file already being used..." exceptions when running multiple test fixtures
             {
@@ -28,5 +27,11 @@ namespace refactor_me.Tests.Integration
                 
             }
         }
+
+        private static string GetDbPath()
+        {
+            return Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName,
+                "Databases");
+        } 
     }
 }

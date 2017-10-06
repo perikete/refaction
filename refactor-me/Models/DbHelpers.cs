@@ -1,9 +1,10 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 using System.Web;
 
 namespace refactor_me.Models
 {
-    public class Helpers
+    public class DbHelpers
     {
         private const string ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={DataDirectory}\Database.mdf;Integrated Security=True";
         private const string TestConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={DataDirectory}\TestDatabase.mdf;Integrated Security=True";

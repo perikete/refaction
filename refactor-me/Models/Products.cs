@@ -22,7 +22,7 @@ namespace refactor_me.Models
         private void LoadProducts(string where)
         {
             Items = new List<Product>();
-            using (var conn = Helpers.NewConnection())
+            using (var conn = DbHelpers.NewConnection())
             {
                 var cmd = new SqlCommand($"select id from product {where}", conn);
                 conn.Open();
@@ -64,7 +64,7 @@ namespace refactor_me.Models
         public Product(Guid id)
         {
             IsNew = true;
-            var conn = Helpers.NewConnection();
+            var conn = DbHelpers.NewConnection();
             var cmd = new SqlCommand($"select * from product where id = '{id}'", conn);
             conn.Open();
 
@@ -82,7 +82,7 @@ namespace refactor_me.Models
 
         public void Save()
         {
-            var conn = Helpers.NewConnection();
+            var conn = DbHelpers.NewConnection();
             var cmd = IsNew ? 
                 new SqlCommand($"insert into product (id, name, description, price, deliveryprice) values ('{Id}', '{Name}', '{Description}', {Price}, {DeliveryPrice})", conn) : 
                 new SqlCommand($"update product set name = '{Name}', description = '{Description}', price = {Price}, deliveryprice = {DeliveryPrice} where id = '{Id}'", conn);
@@ -96,7 +96,7 @@ namespace refactor_me.Models
             foreach (var option in new ProductOptions(Id).Items)
                 option.Delete();
 
-            var conn = Helpers.NewConnection();
+            var conn = DbHelpers.NewConnection();
             conn.Open();
             var cmd = new SqlCommand($"delete from product where id = '{Id}'", conn);
             cmd.ExecuteNonQuery();
@@ -120,7 +120,7 @@ namespace refactor_me.Models
         private void LoadProductOptions(string where)
         {
             Items = new List<ProductOption>();
-            var conn = Helpers.NewConnection();
+            var conn = DbHelpers.NewConnection();
             var cmd = new SqlCommand($"select id from productoption {where}", conn);
             conn.Open();
 
@@ -155,7 +155,7 @@ namespace refactor_me.Models
         public ProductOption(Guid id)
         {
             IsNew = true;
-            var conn = Helpers.NewConnection();
+            var conn = DbHelpers.NewConnection();
             var cmd = new SqlCommand($"select * from productoption where id = '{id}'", conn);
             conn.Open();
 
@@ -172,7 +172,7 @@ namespace refactor_me.Models
 
         public void Save()
         {
-            var conn = Helpers.NewConnection();
+            var conn = DbHelpers.NewConnection();
             var cmd = IsNew ?
                 new SqlCommand($"insert into productoption (id, productid, name, description) values ('{Id}', '{ProductId}', '{Name}', '{Description}')", conn) :
                 new SqlCommand($"update productoption set name = '{Name}', description = '{Description}' where id = '{Id}'", conn);
@@ -183,7 +183,7 @@ namespace refactor_me.Models
 
         public void Delete()
         {
-            var conn = Helpers.NewConnection();
+            var conn = DbHelpers.NewConnection();
             conn.Open();
             var cmd = new SqlCommand($"delete from productoption where id = '{Id}'", conn);
             cmd.ExecuteReader();

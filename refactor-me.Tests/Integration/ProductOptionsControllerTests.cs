@@ -9,8 +9,8 @@ namespace refactor_me.Tests.Integration
     [TestClass]
     public class ProductOptionsControllerTests
     {
-        [ClassInitialize]
-        public static void SetUp(TestContext context)
+        [TestInitialize]
+        public void SetUp()
         {
             TestHelpers.SetUp();    
         } 
