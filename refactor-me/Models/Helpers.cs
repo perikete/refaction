@@ -12,7 +12,10 @@ namespace refactor_me.Models
 
         public static SqlConnection NewConnection()
         {
-            return !string.IsNullOrEmpty(TestDataDirectory) ? new SqlConnection(TestConnectionString.Replace("{DataDirectory}", TestDataDirectory)) : new SqlConnection(ConnectionString.Replace("{DataDirectory}", HttpContext.Current.Server.MapPath("~/App_Data")));
+            return !string.IsNullOrEmpty(TestDataDirectory)
+                ? new SqlConnection(TestConnectionString.Replace("{DataDirectory}", TestDataDirectory))
+                : new SqlConnection(ConnectionString.Replace("{DataDirectory}",
+                    HttpContext.Current.Server.MapPath("~/App_Data")));
         }
     }
 }
