@@ -15,14 +15,17 @@ namespace refactor_me.Repositories
             _connection = connection;
         }
 
-        public IEnumerable<Product> GetAll()
+        public Products GetAll()
         {
-            return _connection.Query<Product>("select * from product");
+            return new Products { Items = _connection.Query<Product>("select * from product") };
         }
 
-        public IEnumerable<Product> GetByName(string name)
+        public Products GetByName(string name)
         {
-            return _connection.Query<Product>($"select * from product where lower(name) like '%{name.ToLower()}%'");
+            return new Products
+            {
+                Items = _connection.Query<Product>($"select * from product where lower(name) like '%{name.ToLower()}%'")
+            };
         }
 
         public void Add(Product product)
@@ -36,15 +39,28 @@ namespace refactor_me.Repositories
             return _connection.QueryFirstOrDefault<Product>("select * from product where id = @id", new { id });
         }
 
-        public void Update(Product product)
+        public void Update(Guid id, Product product)
         {
             _connection.ExecuteScalar(
-                $"update product set name = '{product.Name}', description = '{product.Description}', price = {product.Price}, deliveryprice = {product.DeliveryPrice} where id = '{product.Id}'");
+                "update product set name = @productName, description = @productDescription, price = @productPrice, deliveryprice = @productDeliveryPrice where id = @id",
+                new {productName = product.Name, productDescription = product.Description, productPrice= product.Price, productDeliveryPrice = product.DeliveryPrice, id});
         }
 
         public void Delete(Guid id)
         {
             _connection.ExecuteScalar($"delete from product where id = '{id}'");
+        }
+
+        public void AddOption(Guid productId, ProductOption productOption)
+        {
+            _connection.ExecuteScalar(
+                $"insert into productoption (id, productid, name, description) values ('{productOption.Id}', '{productId}', '{productOption.Name}', '{productOption.Description}')");
+        }
+
+        public IEnumerable<ProductOption> GetOptions(Guid productId)
+        {
+            return _connection.Query<ProductOption>(
+                "select * from productoption where productid = @productId", new {productId});
         }
     }
 }

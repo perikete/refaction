@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using refactor_me.Models;
 using refactor_me.Repositories;
@@ -25,7 +22,7 @@ namespace refactor_me.Tests.Integration.Repositories
 
             var products = repository.GetAll();
 
-            Assert.AreEqual(products.Count(), 3);
+            Assert.AreEqual(products.Items.Count(), 3);
         }
 
         [TestMethod]
@@ -35,7 +32,7 @@ namespace refactor_me.Tests.Integration.Repositories
 
             var products = repository.GetByName("iphone");
 
-            Assert.AreEqual(products.Count(), 1);
+            Assert.AreEqual(products.Items.Count(), 1);
         }
 
         [TestMethod]
@@ -83,12 +80,11 @@ namespace refactor_me.Tests.Integration.Repositories
             {
                 Description = "Test",
                 DeliveryPrice = 12,
-                Id = productId,
                 Name = "Test Name",
                 Price = 34
             };
 
-            repository.Update(productToUpdate);
+            repository.Update(productId, productToUpdate);
             var product = repository.GetById(productId);
 
             Assert.AreEqual(product.Name, product.Name);
@@ -110,6 +106,42 @@ namespace refactor_me.Tests.Integration.Repositories
 
             Assert.IsNull(product);
         }
+
+        [TestMethod]
+        public void Can_Add_Product_Option()
+        {
+            var repository = GetProductRepository();
+            var productId = Guid.NewGuid();
+            var newProductOption = new ProductOption
+            {
+                Description = "Option 1",
+                Name = "Option",
+                Id = Guid.NewGuid(),
+                ProductId = productId
+            };
+
+            repository.AddOption(productId, newProductOption);
+
+            var productOptions = repository.GetOptions(productId);
+
+            Assert.AreEqual(productOptions.Count(), 1);
+
+
+        }
+
+       /* [TestMethod]
+        public void Can_Delete_Product_With_Options()
+        {
+            var productId = Guid.NewGuid();
+            var repository = GetProductRepository();
+            repository.Add(new Product { Id = productId });
+
+            repository.Delete(productId);
+
+            var product = repository.GetById(productId);
+
+            Assert.IsNull(product);
+        }*/
 
         private static ProductRepository GetProductRepository()
         {

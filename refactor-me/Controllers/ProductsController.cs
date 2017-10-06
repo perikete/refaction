@@ -2,32 +2,40 @@
 using System.Net;
 using System.Web.Http;
 using refactor_me.Models;
+using refactor_me.Repositories;
 
 namespace refactor_me.Controllers
 {
     [RoutePrefix("products")]
     public class ProductsController : ApiController
     {
+        private readonly ProductRepository _productRepository;
+
+        public ProductsController(ProductRepository productRepository)
+        {
+            _productRepository = productRepository;
+        }
+
         [Route]
         [HttpGet]
         public Products GetAll()
         {
-            return new Products();
+            return _productRepository.GetAll();
         }
 
         [Route]
         [HttpGet]
         public Products SearchByName(string name)
         {
-            return new Products(name);
+            return _productRepository.GetByName(name);
         }
 
         [Route("{id}")]
         [HttpGet]
         public Product GetProduct(Guid id)
         {
-            var product = new Product(id);
-            if (product.IsNew)
+            var product = _productRepository.GetById(id);
+            if (product == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return product;
@@ -37,31 +45,21 @@ namespace refactor_me.Controllers
         [HttpPost]
         public void Create(Product product)
         {
-            product.Save();
+            _productRepository.Add(product); 
         }
 
         [Route("{id}")]
         [HttpPut]
         public void Update(Guid id, Product product)
         {
-            var orig = new Product(id)
-            {
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                DeliveryPrice = product.DeliveryPrice
-            };
-
-            if (!orig.IsNew)
-                orig.Save();
+            _productRepository.Update(id, product); 
         }
 
         [Route("{id}")]
         [HttpDelete]
         public void Delete(Guid id)
         {
-            var product = new Product(id);
-            product.Delete();
+            _productRepository.Delete(id);
         }
 
        
