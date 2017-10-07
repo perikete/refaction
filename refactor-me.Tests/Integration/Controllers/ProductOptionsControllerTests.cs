@@ -10,13 +10,7 @@ namespace refactor_me.Tests.Integration.Controllers
 {
     [TestClass]
     public class ProductOptionsControllerTests : IntegrationTestBase
-    {
-        [TestInitialize]
-        public void Initialize()
-        {
-            SetUp();
-        }
-
+    {  
         [TestMethod]
         public void Can_Get_Options_For_Product()
         {
@@ -32,18 +26,16 @@ namespace refactor_me.Tests.Integration.Controllers
         public void Can_Get_Product_Option()
         {
             var productId = Guid.NewGuid();
-            var optionId = Guid.NewGuid();
             var controller = GetController();
             var newProductOption = new ProductOption
             {
                 Description = "Description",
-                Id = optionId,
                 Name = "Name",
                 ProductId = productId
             };
             controller.CreateOption(productId, newProductOption);
 
-            var productOption = controller.GetOption(productId, optionId);
+            var productOption = controller.GetOption(productId, newProductOption.Id);
 
             Assert.IsNotNull(productOption);
         }
@@ -64,18 +56,16 @@ namespace refactor_me.Tests.Integration.Controllers
         {
             var productId = Guid.Parse("8f2e9176-35ee-4f0a-ae55-83023d2db1a3");
             var controller = GetController();
-            var productOptionId = Guid.NewGuid();
             var newProductOption = new ProductOption
             {
                 Description = "test",
-                Id = productOptionId,
                 Name = "test",
                 ProductId = productId
             };
 
             controller.CreateOption(productId, newProductOption);
 
-            var productOption = controller.GetOption(productId, productOptionId);
+            var productOption = controller.GetOption(productId, newProductOption.Id);
 
             Assert.IsNotNull(productOption);
         }

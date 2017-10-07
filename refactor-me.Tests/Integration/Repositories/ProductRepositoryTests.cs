@@ -9,12 +9,6 @@ namespace refactor_me.Tests.Integration.Repositories
     [TestClass]
     public class ProductRepositoryTests : IntegrationTestBase
     {
-        [TestInitialize]
-        public void Initialize()
-        {
-            SetUp();
-        }
-
         [TestMethod]
         public void Can_Get_All_Products()
         {
@@ -84,8 +78,7 @@ namespace refactor_me.Tests.Integration.Repositories
         public void Can_Update_Product()
         {
             var productId = Guid.Parse("01234567-89ab-cdef-0123-456789abcdef");
-            var repository = GetProductRepository();
-            repository.Add(new Product {Id = productId});
+            var repository = GetProductRepository(); 
             var productToUpdate = new Product
             {
                 Description = "Test",

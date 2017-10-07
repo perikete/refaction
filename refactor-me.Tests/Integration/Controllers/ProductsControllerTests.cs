@@ -11,12 +11,6 @@ namespace refactor_me.Tests.Integration.Controllers
     [TestClass]
     public class ProductsControllerTests : IntegrationTestBase
     {
-        [TestInitialize]
-        public void Initialize()
-        {
-            SetUp();
-        }
-
         [TestMethod]
         public void Can_Get_All_Products()
         {
@@ -53,10 +47,19 @@ namespace refactor_me.Tests.Integration.Controllers
         public void Can_Get_Product_By_Id()
         {
             var controller = GetProductsController();
+            var newProduct = new Product
+            {
+                DeliveryPrice = 12,
+                Description = "Description",
+                Name = "Name",
+                Price = 32
+            };
+            controller.Create(newProduct);
 
-            var product = controller.GetProduct(Guid.Parse("01234567-89ab-cdef-0123-456789abcdef"));
+            var product = controller.GetProduct(newProduct.Id);
 
             Assert.IsNotNull(product);
+            Assert.AreEqual(product.Id, newProduct.Id);
         }
 
         [TestMethod]
@@ -71,12 +74,11 @@ namespace refactor_me.Tests.Integration.Controllers
         [TestMethod]
         public void Can_Create_Product()
         {
-            var productId = Guid.NewGuid();
             var controller = GetProductsController();
-            var newProduct = new Product {DeliveryPrice = 12, Description = "Test", Id = productId, Name = "Test", Price = 3};
+            var newProduct = new Product {DeliveryPrice = 12, Description = "Test", Name = "Test", Price = 3};
 
             controller.Create(newProduct);
-            var product = controller.GetProduct(productId);
+            var product = controller.GetProduct(newProduct.Id);
 
             Assert.IsNotNull(product);
         }
