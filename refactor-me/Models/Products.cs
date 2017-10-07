@@ -27,18 +27,6 @@ namespace refactor_me.Models
         public Product()
         {
             Id = Guid.NewGuid(); 
-        } 
-       
-
-        public void Delete()
-        {
-            foreach (var option in new ProductOptions(Id).Items)
-                option.Delete();
-
-            var conn = DbHelpers.NewConnection();
-            conn.Open();
-            var cmd = new SqlCommand($"delete from product where id = '{Id}'", conn);
-            cmd.ExecuteNonQuery();
         }
     }
 
@@ -46,10 +34,7 @@ namespace refactor_me.Models
     {
         public List<ProductOption> Items { get; private set; }
 
-        public ProductOptions()
-        {
-            LoadProductOptions(null);
-        }
+        
 
         public ProductOptions(Guid productId)
         {

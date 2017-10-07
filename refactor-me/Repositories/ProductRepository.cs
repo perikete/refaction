@@ -48,19 +48,34 @@ namespace refactor_me.Repositories
 
         public void Delete(Guid id)
         {
-            _connection.ExecuteScalar($"delete from product where id = '{id}'");
+            _connection.ExecuteScalar("delete from productoption where productid = @id", new { id });
+            _connection.ExecuteScalar("delete from product where id = @id", new { id });
         }
 
         public void AddOption(Guid productId, ProductOption productOption)
         {
             _connection.ExecuteScalar(
-                $"insert into productoption (id, productid, name, description) values ('{productOption.Id}', '{productId}', '{productOption.Name}', '{productOption.Description}')");
+                "insert into productoption (id, productid, name, description) " +
+                "values (@Id, @productId, @Name, @Description)", new
+                {
+                    productOption.Id,
+                    productId,
+                    productOption.Name,
+                    productOption.Description
+                });
         }
 
         public IEnumerable<ProductOption> GetOptions(Guid productId)
         {
             return _connection.Query<ProductOption>(
                 "select * from productoption where productid = @productId", new {productId});
+        }
+
+        public void UpdateOption(Guid optionId, ProductOption productOption)
+        {
+            _connection.ExecuteScalar(
+                "update productoption set name = @Name, description = @Description where id = @optionId",
+                new {productOption.Name, productOption.Description, optionId});
         }
     }
 }

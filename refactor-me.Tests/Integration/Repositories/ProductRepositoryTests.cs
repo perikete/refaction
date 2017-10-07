@@ -124,24 +124,57 @@ namespace refactor_me.Tests.Integration.Repositories
 
             var productOptions = repository.GetOptions(productId);
 
-            Assert.AreEqual(productOptions.Count(), 1);
-
-
+            Assert.AreEqual(productOptions.Count(), 1); 
         }
 
-       /* [TestMethod]
+        [TestMethod]
+        public void Can_Update_Product_Option()
+        {
+            var repository = GetProductRepository();
+            var productId = Guid.NewGuid();
+            var newOptionId = Guid.NewGuid();
+            var newProductOption = new ProductOption
+            {
+                Description = "Option 1",
+                Name = "Option",
+                Id = newOptionId,
+                ProductId = productId
+            };
+            repository.AddOption(productId, newProductOption);
+            var updatedOption = new ProductOption {Description = "Updated Description", Name = "Updated Name"};
+
+            repository.UpdateOption(newOptionId, updatedOption);
+
+            var productOptions = repository.GetOptions(productId);
+
+            Assert.AreEqual(productOptions.Count(), 1);
+            Assert.AreEqual(updatedOption.Name, productOptions.First().Name);
+            Assert.AreEqual(updatedOption.Description, productOptions.First().Description);
+        }
+
+        [TestMethod]
         public void Can_Delete_Product_With_Options()
         {
             var productId = Guid.NewGuid();
             var repository = GetProductRepository();
             repository.Add(new Product { Id = productId });
+            var newProductOption = new ProductOption
+            {
+                Description = "Option 1",
+                Name = "Option",
+                Id = Guid.NewGuid(),
+                ProductId = productId
+            }; 
+            repository.AddOption(productId, newProductOption);
 
             repository.Delete(productId);
 
             var product = repository.GetById(productId);
+            var productOptions = repository.GetOptions(productId);
 
             Assert.IsNull(product);
-        }*/
+            Assert.AreEqual(productOptions.Count(), 0);
+        }
 
         private static ProductRepository GetProductRepository()
         {
