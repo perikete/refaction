@@ -64,10 +64,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Integration\IntegrationTestBase.cs" />
     <Compile Include="Integration\Repositories\ProductRepositoryTests.cs" />
-    <Compile Include="Integration\TestHelpers.cs" />
-    <Compile Include="Integration\ProductOptionsControllerTests.cs" />
-    <Compile Include="Integration\ProductsControllerTests.cs" />
+    <Compile Include="Integration\Controllers\ProductOptionsControllerTests.cs" />
+    <Compile Include="Integration\Controllers\ProductsControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

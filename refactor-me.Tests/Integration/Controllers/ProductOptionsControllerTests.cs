@@ -1,37 +1,47 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using refactor_me.Controllers;
 using refactor_me.Models;
+using refactor_me.Repositories;
 
-namespace refactor_me.Tests.Integration
+namespace refactor_me.Tests.Integration.Controllers
 {
     [TestClass]
-    public class ProductOptionsControllerTests
+    public class ProductOptionsControllerTests : IntegrationTestBase
     {
         [TestInitialize]
-        public void SetUp()
+        public void Initialize()
         {
-            TestHelpers.SetUp();    
-        } 
+            SetUp();
+        }
 
         [TestMethod]
         public void Can_Get_Options_For_Product()
         {
             var productId = Guid.Parse("8f2e9176-35ee-4f0a-ae55-83023d2db1a3");
-            var controller = new ProductOptionsController();
+            var controller = GetController();
 
             var options = controller.GetOptions(productId);
 
-            Assert.AreEqual(options.Items.Count, 2);
+            Assert.AreEqual(options.Items.Count(), 2);
         }
 
         [TestMethod]
         public void Can_Get_Product_Option()
         {
-            var productId = Guid.Parse("8f2e9176-35ee-4f0a-ae55-83023d2db1a3");
-            var optionId = Guid.Parse("0643ccf0-ab00-4862-b3c5-40e2731abcc9");
-            var controller = new ProductOptionsController();
+            var productId = Guid.NewGuid();
+            var optionId = Guid.NewGuid();
+            var controller = GetController();
+            var newProductOption = new ProductOption
+            {
+                Description = "Description",
+                Id = optionId,
+                Name = "Name",
+                ProductId = productId
+            };
+            controller.CreateOption(productId, newProductOption);
 
             var productOption = controller.GetOption(productId, optionId);
 
@@ -44,7 +54,7 @@ namespace refactor_me.Tests.Integration
         {
             var productId = Guid.Parse("8f2e9176-35ee-4f0a-ae55-83023d2db1a3");
             var optionId = Guid.Empty;
-            var controller = new ProductOptionsController();
+            var controller = GetController();
 
             controller.GetOption(productId, optionId);
         }
@@ -53,7 +63,7 @@ namespace refactor_me.Tests.Integration
         public void Can_Create_Product_Option()
         {
             var productId = Guid.Parse("8f2e9176-35ee-4f0a-ae55-83023d2db1a3");
-            var controller = new ProductOptionsController();
+            var controller = GetController();
             var productOptionId = Guid.NewGuid();
             var newProductOption = new ProductOption
             {
@@ -76,13 +86,15 @@ namespace refactor_me.Tests.Integration
             var productId = Guid.Parse("8f2e9176-35ee-4f0a-ae55-83023d2db1a3");
             var optionId = Guid.Parse("0643ccf0-ab00-4862-b3c5-40e2731abcc9");
             const string expectedDescription = "test";
-            var productOptionToUpdate = new ProductOption { Description = expectedDescription };
-            var controller = new ProductOptionsController();
+            const string expectedName = "Test Name";
+            var productOptionToUpdate = new ProductOption { Description = expectedDescription, Name = expectedName };
+            var controller = GetController();
 
             controller.UpdateOption(optionId, productOptionToUpdate);
             var productOption = controller.GetOption(productId, optionId);
 
             Assert.AreEqual(productOption.Description, expectedDescription);
+            Assert.AreEqual(productOption.Name, expectedName);
         }
 
         [TestMethod]
@@ -90,7 +102,7 @@ namespace refactor_me.Tests.Integration
         {
             var productId = Guid.Parse("8f2e9176-35ee-4f0a-ae55-83023d2db1a3");
             var optionId = Guid.Parse("0643ccf0-ab00-4862-b3c5-40e2731abcc9");
-            var controller = new ProductOptionsController();
+            var controller = GetController();
             var pass = false;
 
             controller.DeleteOption(optionId);
@@ -107,6 +119,12 @@ namespace refactor_me.Tests.Integration
             {
                 Assert.IsTrue(pass);
             }
+        }
+
+        private ProductOptionsController GetController()
+        {
+            var productRepository = new ProductRepository(GetTestDbConnection());
+            return new ProductOptionsController(productRepository);
         }
     }
 }

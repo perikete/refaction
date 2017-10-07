@@ -6,15 +6,15 @@ using refactor_me.Controllers;
 using refactor_me.Models;
 using refactor_me.Repositories;
 
-namespace refactor_me.Tests.Integration
+namespace refactor_me.Tests.Integration.Controllers
 {
     [TestClass]
-    public class ProductsControllerTests
+    public class ProductsControllerTests : IntegrationTestBase
     {
         [TestInitialize]
-        public void SetUp()
+        public void Initialize()
         {
-            TestHelpers.SetUp();
+            SetUp();
         }
 
         [TestMethod]
@@ -119,9 +119,9 @@ namespace refactor_me.Tests.Integration
             } 
         }
 
-        private static ProductsController GetProductsController()
+        private ProductsController GetProductsController()
         {
-            var productRepository = new ProductRepository(DbHelpers.NewConnection());
+            var productRepository = new ProductRepository(GetTestDbConnection());
             return new ProductsController(productRepository);
         }
     }

@@ -48,8 +48,19 @@ namespace refactor_me.Repositories
 
         public void Delete(Guid id)
         {
-            _connection.ExecuteScalar("delete from productoption where productid = @id", new { id });
+            var productOptions = GetOptions(id);
+
+            foreach (var productOption in productOptions)
+            {
+                DeleteOption(productOption.Id);
+            }
+
             _connection.ExecuteScalar("delete from product where id = @id", new { id });
+        }
+
+        public void DeleteOption(Guid id)
+        {
+            _connection.ExecuteScalar("delete from productoption where id = @id", new {id});
         }
 
         public void AddOption(Guid productId, ProductOption productOption)
@@ -76,6 +87,12 @@ namespace refactor_me.Repositories
             _connection.ExecuteScalar(
                 "update productoption set name = @Name, description = @Description where id = @optionId",
                 new {productOption.Name, productOption.Description, optionId});
+        }
+
+        public ProductOption GetOption(Guid id)
+        {
+            return _connection.QuerySingleOrDefault<ProductOption>("select * from productoption where id = @id",
+                new {id});
         }
     }
 }

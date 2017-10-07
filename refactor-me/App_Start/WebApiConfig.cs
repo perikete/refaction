@@ -1,4 +1,6 @@
 ﻿using System.Web.Http;
+using System.Web.Http.Dispatcher;
+using refactor_me.Infrastructure;
 
 namespace refactor_me
 {
@@ -15,10 +17,13 @@ namespace refactor_me
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                "DefaultApi",
+                "api/{controller}/{id}",
+                new { id = RouteParameter.Optional }
             );
+
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator),
+                new PoorManControllerActivator());
         }
     }
 }

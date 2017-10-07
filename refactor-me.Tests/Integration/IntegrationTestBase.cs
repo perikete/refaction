@@ -1,16 +1,22 @@
-﻿using System.IO;
-using refactor_me.Models;
+﻿using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 
 namespace refactor_me.Tests.Integration
 {
-    public static class TestHelpers
-    { 
+    public abstract class IntegrationTestBase
+    {
+        private const string TestConnectionString =
+                @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={DataDirectory}\TestDatabase.mdf;Integrated Security=True";
+
+        protected IDbConnection GetTestDbConnection()
+        {
+            return new SqlConnection(TestConnectionString.Replace("{DataDirectory}", GetDbPath()));
+        }
 
         public static void SetUp()
         {
             var dbPath = GetDbPath();
-
-            DbHelpers.TestDataDirectory = dbPath; 
 
             try  // Super hack to avoid "file already being used..." exceptions when running multiple test fixtures
             {
@@ -24,7 +30,7 @@ namespace refactor_me.Tests.Integration
             }
             catch
             {
-                
+                // ignored
             }
         }
 
@@ -32,6 +38,6 @@ namespace refactor_me.Tests.Integration
         {
             return Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName,
                 "Databases");
-        } 
+        }
     }
 }
