@@ -24,7 +24,7 @@ namespace refactor_me.Repositories
         {
             return new Products
             {
-                Items = _connection.Query<Product>($"select * from product where lower(name) like '%{name.ToLower()}%'")
+                Items = _connection.Query<Product>("select * from product where lower(name) like '%{name.ToLower()}%'")
             };
         }
 

@@ -3,32 +3,32 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Transactions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using refactor_me.Infrastructure;
 
 namespace refactor_me.Tests.Integration
 {
     /// <summary>
     /// Base class used for integration test.
+    /// The tests run inside a transaction that later is rolled back after each test
+    /// this makes the DB safe and isolated between tests.
     /// </summary>
     [TestClass]
     public abstract class IntegrationTestBase
     {
         private TransactionScope _scope;
 
-        private const string TestConnectionString =
-                @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={DataDirectory}\Database.mdf;Integrated Security=True";
-
         protected IDbConnection GetTestDbConnection()
         {
-            return new SqlConnection(TestConnectionString.Replace("{DataDirectory}", GetDbPath()));
+            var connStr = RefactorMeConfiguration.ConnectionString.Replace("{DataDirectory}", GetDbPath());
+            return new SqlConnection(connStr);
         }
 
-        public void BeginTransaction()
+        private void BeginTransaction()
         {
             _scope = new TransactionScope();
-
         }
 
-        public void RollbackTransaction()
+        private void RollbackTransaction()
         {
             _scope?.Dispose();
         }

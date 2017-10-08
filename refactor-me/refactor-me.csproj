@@ -101,7 +101,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\PoorManControllerActivator.cs" />
-    <Compile Include="Models\DbHelpers.cs" />
+    <Compile Include="Infrastructure\RefactorMeConfiguration.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductOption.cs" />
     <Compile Include="Models\ProductOptions.cs" />
