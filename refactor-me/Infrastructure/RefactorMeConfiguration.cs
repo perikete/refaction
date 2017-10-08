@@ -11,7 +11,6 @@ namespace refactor_me.Infrastructure
         /// Connection String
         /// </summary>
         public static readonly string ConnectionString =
-            ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-
+            ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;    
     }
 }

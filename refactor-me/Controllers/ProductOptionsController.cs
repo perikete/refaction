@@ -20,11 +20,10 @@ namespace refactor_me.Controllers
         [HttpGet]
         public ProductOptions GetOptions(Guid productId)
         {
-            var productOptions = new ProductOptions
+            return new ProductOptions
             {
                 Items = _productRepository.GetOptions(productId)
             };
-            return productOptions;
         }
 
         [Route("{productId}/options/{id}")]
@@ -56,8 +55,7 @@ namespace refactor_me.Controllers
         [HttpDelete]
         public void DeleteOption(Guid id)
         {
-           _productRepository.DeleteOption(id);
+            _productRepository.DeleteOption(id);
         }
-
     }
 }

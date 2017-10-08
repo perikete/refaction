@@ -20,11 +20,21 @@ namespace refactor_me.Tests.Integration.Repositories
         }
 
         [TestMethod]
-        public void Can_Get_Products_By_Name()
+        public void Can_Get_Products_By_Name_with_lowercase()
         {
             var repository = GetProductRepository();
 
             var products = repository.GetByName("iphone");
+
+            Assert.AreEqual(products.Items.Count(), 1);
+        }
+
+        [TestMethod]
+        public void Can_Get_Products_By_Name_with_uppercase()
+        {
+            var repository = GetProductRepository();
+
+            var products = repository.GetByName("IPHONE");
 
             Assert.AreEqual(products.Items.Count(), 1);
         }
@@ -101,7 +111,14 @@ namespace refactor_me.Tests.Integration.Repositories
         {
             var productId = Guid.NewGuid();
             var repository = GetProductRepository();
-            repository.Add(new Product { Id = productId });
+            repository.Add(new Product
+            {
+                Id = productId,
+                Description = "Test",
+                DeliveryPrice = 12,
+                Name = "Test",
+                Price = 32
+            });
 
             repository.Delete(productId);
 
@@ -203,7 +220,14 @@ namespace refactor_me.Tests.Integration.Repositories
         {
             var productId = Guid.NewGuid();
             var repository = GetProductRepository();
-            repository.Add(new Product { Id = productId });
+            repository.Add(new Product
+            {
+                Id = productId,
+                Name = "Test",
+                Description = "Test",
+                DeliveryPrice = 12,
+                Price = 30
+            });
             var newProductOption = new ProductOption
             {
                 Description = "Option 1",

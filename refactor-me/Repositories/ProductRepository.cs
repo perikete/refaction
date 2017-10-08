@@ -24,14 +24,15 @@ namespace refactor_me.Repositories
         {
             return new Products
             {
-                Items = _connection.Query<Product>("select * from product where lower(name) like '%{name.ToLower()}%'")
+                Items = _connection.Query<Product>("select * from product where lower(name) like @name", new { name = '%' + name + '%'})
             };
         }
 
         public void Add(Product product)
         {
             _connection.ExecuteScalar(
-                $"insert into product (id, name, description, price, deliveryprice) values ('{product.Id}', '{product.Name}', '{product.Description}', {product.Price}, {product.DeliveryPrice})");
+                "insert into product (id, name, description, price, deliveryprice) values (@Id, @Name, @Description, @Price, @DeliveryPrice)",
+                new {product.Id, product.Name, product.Description, product.Price, product.DeliveryPrice});
         }
 
         public Product GetById(Guid id)

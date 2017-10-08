@@ -60,8 +60,6 @@ namespace refactor_me.Controllers
         public void Delete(Guid id)
         {
             _productRepository.Delete(id);
-        }
-
-       
+        }  
     }
 }
