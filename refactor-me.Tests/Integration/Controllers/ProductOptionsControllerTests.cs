@@ -38,6 +38,7 @@ namespace refactor_me.Tests.Integration.Controllers
             var productOption = controller.GetOption(productId, newProductOption.Id);
 
             Assert.IsNotNull(productOption);
+            Assert.AreEqual(productOption.Id, newProductOption.Id);
         }
 
         [TestMethod]
@@ -68,6 +69,7 @@ namespace refactor_me.Tests.Integration.Controllers
             var productOption = controller.GetOption(productId, newProductOption.Id);
 
             Assert.IsNotNull(productOption);
+            Assert.AreEqual(productOption.Id, newProductOption.Id);
         }
 
         [TestMethod]

@@ -4,7 +4,7 @@ namespace refactor_me.Models
 {
     public class Product
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
 
         public string Name { get; set; }
 
@@ -12,8 +12,7 @@ namespace refactor_me.Models
 
         public decimal Price { get; set; }
 
-        public decimal DeliveryPrice { get; set; } 
-   
+        public decimal DeliveryPrice { get; set; }  
 
         public Product()
         {

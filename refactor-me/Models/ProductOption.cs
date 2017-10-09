@@ -4,7 +4,7 @@ namespace refactor_me.Models
 {
     public class ProductOption
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
 
         public Guid ProductId { get; set; }
 

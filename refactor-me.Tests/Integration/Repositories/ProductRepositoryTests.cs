@@ -43,45 +43,41 @@ namespace refactor_me.Tests.Integration.Repositories
         public void Can_Get_Products_By_Id()
         {
             var repository = GetProductRepository();
-            var productId = Guid.NewGuid();
             var newProduct = new Product
             {
                 Description = "Test",
-                DeliveryPrice = 12,
-                Id = productId,
+                DeliveryPrice = 12, 
                 Name = "Test Name",
                 Price = 34
             };
-
             repository.Add(newProduct);
 
-            var product = repository.GetById(productId);
+            var product = repository.GetById(newProduct.Id);
 
             Assert.IsNotNull(product);
+            Assert.AreEqual(product.Id, newProduct.Id);
         }
 
         [TestMethod]
         public void Can_Add_A_Product()
         {
             var repository = GetProductRepository();
-            var productId = Guid.NewGuid();
             var newProduct = new Product
             {
                 Description = "Test",
                 DeliveryPrice = 12,
-                Id = productId,
                 Name = "Test Name",
                 Price = 34
-            };
-
+            }; 
             repository.Add(newProduct);
 
-            var product = repository.GetById(productId);
+            var product = repository.GetById(newProduct.Id);
 
             Assert.AreEqual(product.Name, newProduct.Name);
             Assert.AreEqual(product.DeliveryPrice, newProduct.DeliveryPrice);
             Assert.AreEqual(product.Description, newProduct.Description);
             Assert.AreEqual(product.Price, newProduct.Price);
+            Assert.AreEqual(product.Id, newProduct.Id);
         }
 
         [TestMethod]
@@ -98,8 +94,8 @@ namespace refactor_me.Tests.Integration.Repositories
             };
 
             repository.Update(productId, productToUpdate);
-            var product = repository.GetById(productId);
 
+            var product = repository.GetById(productId); 
             Assert.AreEqual(product.Name, product.Name);
             Assert.AreEqual(product.DeliveryPrice, product.DeliveryPrice);
             Assert.AreEqual(product.Description, product.Description);
@@ -109,83 +105,75 @@ namespace refactor_me.Tests.Integration.Repositories
         [TestMethod]
         public void Can_Delete_Product_Without_Options()
         {
-            var productId = Guid.NewGuid();
             var repository = GetProductRepository();
-            repository.Add(new Product
+            var newProduct = new Product
             {
-                Id = productId,
                 Description = "Test",
                 DeliveryPrice = 12,
                 Name = "Test",
                 Price = 32
-            });
+            };
+            repository.Add(newProduct);
 
-            repository.Delete(productId);
+            repository.Delete(newProduct.Id);
 
-            var product = repository.GetById(productId);
-
+            var product = repository.GetById(newProduct.Id); 
             Assert.IsNull(product);
         }
 
         [TestMethod]
         public void Can_Add_Product_Option()
         {
-            var repository = GetProductRepository();
             var productId = Guid.NewGuid();
+            var repository = GetProductRepository();
             var newProductOption = new ProductOption
             {
                 Description = "Option 1",
                 Name = "Option",
-                Id = Guid.NewGuid(),
                 ProductId = productId
             };
-
+            
             repository.AddOption(productId, newProductOption);
 
-            var productOptions = repository.GetOptions(productId);
-
-            Assert.AreEqual(productOptions.Count(), 1); 
+            var productOptions = repository.GetOption(newProductOption.Id);
+            Assert.AreEqual(productOptions.Id, newProductOption.Id);
         }
 
         [TestMethod]
         public void Can_Get_Product_Option()
         {
             var repository = GetProductRepository();
-            var newProductOptionId = Guid.NewGuid();
             var productId = Guid.NewGuid();
             var newProductOption = new ProductOption
             {
                 Description = "Option 1",
                 Name = "Option",
-                Id = newProductOptionId,
                 ProductId = productId
             };
-
             repository.AddOption(productId, newProductOption);
 
-            var productOption = repository.GetOption(newProductOptionId);
+            var productOption = repository.GetOption(newProductOption.Id);
 
             Assert.IsNotNull(productOption);
+            Assert.AreEqual(productOption.Id, newProductOption.Id);
         }
 
         [TestMethod]
         public void Can_Delete_Product_Option()
         {
             var repository = GetProductRepository();
-            var newProductOptionId = Guid.NewGuid();
             var productId = Guid.NewGuid();
             var newProductOption = new ProductOption
             {
                 Description = "Option 1",
                 Name = "Option",
-                Id = newProductOptionId,
                 ProductId = productId
             }; 
             repository.AddOption(productId, newProductOption);
 
-            repository.DeleteOption(newProductOptionId);
+            repository.DeleteOption(newProductOption.Id);
 
-            var productOption = repository.GetOption(newProductOptionId);
+            var productOption = repository.GetOption(newProductOption.Id);
 
             Assert.IsNull(productOption);
         }
@@ -195,52 +183,46 @@ namespace refactor_me.Tests.Integration.Repositories
         {
             var repository = GetProductRepository();
             var productId = Guid.NewGuid();
-            var newOptionId = Guid.NewGuid();
             var newProductOption = new ProductOption
             {
                 Description = "Option 1",
                 Name = "Option",
-                Id = newOptionId,
                 ProductId = productId
             };
             repository.AddOption(productId, newProductOption);
             var updatedOption = new ProductOption {Description = "Updated Description", Name = "Updated Name"};
 
-            repository.UpdateOption(newOptionId, updatedOption);
+            repository.UpdateOption(newProductOption.Id, updatedOption);
 
-            var productOptions = repository.GetOptions(productId);
-
-            Assert.AreEqual(productOptions.Count(), 1);
-            Assert.AreEqual(updatedOption.Name, productOptions.First().Name);
-            Assert.AreEqual(updatedOption.Description, productOptions.First().Description);
+            var productOptions = repository.GetOption(newProductOption.Id);
+            Assert.AreEqual(updatedOption.Name, productOptions.Name);
+            Assert.AreEqual(updatedOption.Description, productOptions.Description);
         }
 
         [TestMethod]
         public void Can_Delete_Product_With_Options()
         {
-            var productId = Guid.NewGuid();
             var repository = GetProductRepository();
-            repository.Add(new Product
+            var newProduct = new Product
             {
-                Id = productId,
                 Name = "Test",
                 Description = "Test",
                 DeliveryPrice = 12,
                 Price = 30
-            });
+            };
+            repository.Add(newProduct);
             var newProductOption = new ProductOption
             {
                 Description = "Option 1",
                 Name = "Option",
-                Id = Guid.NewGuid(),
-                ProductId = productId
+                ProductId = newProduct.Id
             }; 
-            repository.AddOption(productId, newProductOption);
+            repository.AddOption(newProduct.Id, newProductOption);
 
-            repository.Delete(productId);
+            repository.Delete(newProduct.Id);
 
-            var product = repository.GetById(productId);
-            var productOptions = repository.GetOptions(productId);
+            var product = repository.GetById(newProduct.Id);
+            var productOptions = repository.GetOptions(newProduct.Id);
 
             Assert.IsNull(product);
             Assert.AreEqual(productOptions.Count(), 0);

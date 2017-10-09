@@ -81,6 +81,7 @@ namespace refactor_me.Tests.Integration.Controllers
             var product = controller.GetProduct(newProduct.Id);
 
             Assert.IsNotNull(product);
+            Assert.AreEqual(product.Id, newProduct.Id);
         }
 
         [TestMethod]
